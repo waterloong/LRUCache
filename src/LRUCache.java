@@ -3,20 +3,20 @@ import java.util.Map;
 
 public class LRUCache {
 
-    private static class LinkedListNode {
+    private static class DoublyLinkedListNode {
         int key, value;
-        LinkedListNode prev, next;
+        DoublyLinkedListNode prev, next;
     }
 
     private int capacity;
-    private LinkedListNode head, tail;
-    private Map<Integer, LinkedListNode> map = new HashMap<>();
+    private DoublyLinkedListNode head, tail; // works like a queue, push to tail & pop from head
+    private Map<Integer, DoublyLinkedListNode> map = new HashMap<>();
 
     public LRUCache(int capacity) {
         this.capacity = capacity;
     }
 
-    private void append(LinkedListNode node) {
+    private void append(DoublyLinkedListNode node) {
         if (map.size() == 1) {
             head = node;
             tail = node;
@@ -28,9 +28,9 @@ public class LRUCache {
         }
     }
 
-    private void remove(LinkedListNode node) {
-        LinkedListNode prev = node.prev;
-        LinkedListNode next = node.next;
+    private void remove(DoublyLinkedListNode node) {
+        DoublyLinkedListNode prev = node.prev;
+        DoublyLinkedListNode next = node.next;
         if (prev == null) {
             head = next;
         } else {
@@ -44,7 +44,7 @@ public class LRUCache {
     }
 
     public int get(int key) {
-        LinkedListNode node = map.get(key);
+        DoublyLinkedListNode node = map.get(key);
         if (node == null) {
             return -1;
         } else {
@@ -56,12 +56,12 @@ public class LRUCache {
 
     public void set(int key, int value) {
         if (map.containsKey(key)) {
-            LinkedListNode node = map.get(key);
+            DoublyLinkedListNode node = map.get(key);
             node.value = value;
             remove(node);
             append(node);
         } else {
-            LinkedListNode node = new LinkedListNode();
+            DoublyLinkedListNode node = new DoublyLinkedListNode();
             node.key = key;
             node.value = value;
             map.put(key, node);
@@ -74,6 +74,7 @@ public class LRUCache {
     }
 
     public static void main(String[] args) {
+        // simple test case
         LRUCache l = new LRUCache(2);
         l.set(2, 1);
         l.set(1, 1);
